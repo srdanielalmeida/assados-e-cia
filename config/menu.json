@@ -1,0 +1,359 @@
+{
+  "restaurante": {
+    "nome": "Assados & Cia",
+    "slogan": "O cheiro de assado que você não esquece",
+    "telefone": "11 5837-0965",
+    "whatsapp": "5511944538326",
+    "whatsappDisplay": "(11) 94453-8326",
+    "instagram": "@assadosecia.angela",
+    "instagramUrl": "https://www.instagram.com/assadosecia.angela",
+    "endereco": "R. João de Lima Bonfante, 29",
+    "bairro": "Jardim Ângela",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "mapsUrl": "https://maps.google.com/?q=Rua+João+de+Lima+Bonfante+29+Jardim+Ângela+São+Paulo",
+    "horarios": {
+      "segunda": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "22:00"
+      },
+      "terca": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "22:00"
+      },
+      "quarta": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "22:00"
+      },
+      "quinta": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "22:00"
+      },
+      "sexta": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "23:00"
+      },
+      "sabado": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "23:00"
+      },
+      "domingo": {
+        "aberto": true,
+        "abre": "11:00",
+        "fecha": "22:00"
+      }
+    },
+    "pix": {
+      "tipo": "telefone",
+      "chave": "11944538326",
+      "titular": "Assados & Cia"
+    }
+  },
+  "categorias": [
+    {
+      "id": "aves",
+      "nome": "Aves",
+      "emoji": "🍗",
+      "descricao": "Frango assado e mais"
+    },
+    {
+      "id": "carnes",
+      "nome": "Carnes",
+      "emoji": "🥩",
+      "descricao": "Assados e grelhados"
+    },
+    {
+      "id": "acompanhamentos",
+      "nome": "Acompanhamentos",
+      "emoji": "🥔",
+      "descricao": "Para completar o prato"
+    },
+    {
+      "id": "bebidas",
+      "nome": "Bebidas",
+      "emoji": "🥤",
+      "descricao": "Geladinha para acompanhar"
+    }
+  ],
+  "itens": [
+    {
+      "id": "frango-inteiro",
+      "nome": "Frango Inteiro Assado",
+      "categoria": "aves",
+      "descricao": "Frango inteiro assado no capricho, com tempero especial da casa. Acompanha 4 batatas bolinhas.",
+      "preco": 45.00,
+      "tipo": "unidade",
+      "unidadeLabel": "unidade",
+      "imagem": "images/pratos/frango-inteiro.jpg",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": "4 batatas bolinhas"
+    },
+    {
+      "id": "coxa-sobrecoxa",
+      "nome": "Coxa e Sobrecoxa Assada",
+      "categoria": "aves",
+      "descricao": "Coxa e sobrecoxa de frango assadas no ponto certo, suculentas e bem temperadas.",
+      "preco": 22.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/frango-pedacos.jpg",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "cupim",
+      "nome": "Cupim Assado",
+      "categoria": "carnes",
+      "descricao": "Cupim bovino assado lentamente até ficar macio e irresistível. Temperado com ervas.",
+      "preco": 59.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/costela-batata.jpg",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": null
+    },
+    {
+      "id": "linguica",
+      "nome": "Linguiça Artesanal Assada",
+      "categoria": "carnes",
+      "descricao": "Linguiça artesanal assada na brasa, crocante por fora e suculenta por dentro.",
+      "preco": 34.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/linguica.jpg",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": null
+    },
+    {
+      "id": "costelinha-suina",
+      "nome": "Costelinha Suína à Pururuca",
+      "categoria": "carnes",
+      "descricao": "Costelinha de porco à pururuca com crosta crocante e tempero especial. Especialidade da casa.",
+      "preco": 49.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/costelinha.jpg",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": null
+    },
+    {
+      "id": "barriga-porco",
+      "nome": "Barriga de Porco à Pururuca",
+      "categoria": "carnes",
+      "descricao": "Barriga de porco assada com casca crocante à pururuca, macia por dentro e cheia de sabor.",
+      "preco": 44.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/barriga-porco.jpg",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "lombo-assado",
+      "nome": "Lombo Suíno Assado",
+      "categoria": "carnes",
+      "descricao": "Lombo suíno assado fatiado, temperado com ervas finas e pimenta. Macio e saboroso.",
+      "preco": 39.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/lombo-fatiado.jpg",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "mix-espetinhos",
+      "nome": "Mix de Espetinhos",
+      "categoria": "carnes",
+      "descricao": "Mix com espetinhos de frango, carne bovina, linguiça e bacon. Acompanha farofa.",
+      "preco": 29.90,
+      "tipo": "porcao",
+      "unidadeLabel": "porção (4 espetinhos)",
+      "imagem": "images/pratos/mix-espetinhos.jpg",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": "farofa"
+    },
+    {
+      "id": "batata-bolinha",
+      "nome": "Batata Bolinha Assada",
+      "categoria": "acompanhamentos",
+      "descricao": "Batatinhas assadas temperadas com azeite, alho e ervas. Crocantes por fora, macias por dentro.",
+      "preco": 12.90,
+      "tipo": "kg",
+      "unidadeLabel": "kg",
+      "imagem": "images/pratos/batata-bolinha.jpg",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "feijao-tropeiro",
+      "nome": "Feijão Tropeiro",
+      "categoria": "acompanhamentos",
+      "descricao": "Feijão tropeiro com farofa, bacon, linguiça, couve e temperos. Uma explosão de sabor.",
+      "preco": 10.00,
+      "tipo": "porcao",
+      "unidadeLabel": "porção",
+      "imagem": "images/pratos/farofa.jpg",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "arroz",
+      "nome": "Arroz Branco",
+      "categoria": "acompanhamentos",
+      "descricao": "Arroz branco soltinho, preparado com temperos naturais.",
+      "preco": 5.00,
+      "tipo": "porcao",
+      "unidadeLabel": "porção",
+      "imagem": null,
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "coca-cola-2l",
+      "nome": "Coca-Cola Original 2L",
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Coca-Cola 2 Litros trincando de gelada.",
+      "preco": 14.00,
+      "tipo": "unidade",
+      "unidadeLabel": "garrafa 2L",
+      "imagem": "images/bebidas/coca_2l.png",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": null
+    },
+    {
+      "id": "coca-cola-zero-2l",
+      "nome": "Coca-Cola Zero 2L",
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Coca-Cola Zero Açúcar 2 Litros bem gelada.",
+      "preco": 14.00,
+      "tipo": "unidade",
+      "unidadeLabel": "garrafa 2L",
+      "imagem": "images/bebidas/coca_2l.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "guarana-2l",
+      "nome": "Guaraná Antarctica 2L",
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Guaraná Antarctica 2 Litros geladinho.",
+      "preco": 12.00,
+      "tipo": "unidade",
+      "unidadeLabel": "garrafa 2L",
+      "imagem": "images/bebidas/guarana_2l.png",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": null
+    },
+    {
+      "id": "fanta-laranja-2l",
+      "nome": "Fanta Laranja 2L",
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Fanta Laranja 2 Litros gelada.",
+      "preco": 12.00,
+      "tipo": "unidade",
+      "unidadeLabel": "garrafa 2L",
+      "imagem": "images/bebidas/fanta_2l.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "coca-cola-lata",
+      "nome": "Coca-Cola Lata 350ml",
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Coca-Cola lata 350ml trincando de gelada.",
+      "preco": 6.00,
+      "tipo": "unidade",
+      "unidadeLabel": "lata 350ml",
+      "imagem": "images/bebidas/coca_lata.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "guarana-lata",
+      "nome": "Guaraná Antarctica Lata 350ml",
+      "categoria": "bebidas",
+      "descricao": "Refrigerante Guaraná Antarctica lata 350ml bem gelado.",
+      "preco": 5.50,
+      "tipo": "unidade",
+      "unidadeLabel": "lata 350ml",
+      "imagem": "images/bebidas/guarana_lata.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "suco-delvalle-uva",
+      "nome": "Suco Del Valle Uva 1L",
+      "categoria": "bebidas",
+      "descricao": "Suco Del Valle sabor uva em caixinha de 1 Litro.",
+      "preco": 9.50,
+      "tipo": "unidade",
+      "unidadeLabel": "caixa 1L",
+      "imagem": "images/bebidas/suco_uva.png",
+      "disponivel": true,
+      "destaque": true,
+      "acompanha": null
+    },
+    {
+      "id": "suco-delvalle-pessego",
+      "nome": "Suco Del Valle Pêssego 1L",
+      "categoria": "bebidas",
+      "descricao": "Suco Del Valle sabor pêssego em caixinha de 1 Litro.",
+      "preco": 9.50,
+      "tipo": "unidade",
+      "unidadeLabel": "caixa 1L",
+      "imagem": "images/bebidas/suco_pessego.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "suco-delvalle-laranja",
+      "nome": "Suco Del Valle Laranja 1L",
+      "categoria": "bebidas",
+      "descricao": "Suco Del Valle sabor laranja em caixinha de 1 Litro.",
+      "preco": 9.50,
+      "tipo": "unidade",
+      "unidadeLabel": "caixa 1L",
+      "imagem": "images/bebidas/suco_laranja.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    },
+    {
+      "id": "suco-caixinha-200ml",
+      "nome": "Suco de Caixinha 200ml",
+      "categoria": "bebidas",
+      "descricao": "Suco em caixinha individual 200ml (Uva, Laranja ou Pêssego).",
+      "preco": 4.00,
+      "tipo": "unidade",
+      "unidadeLabel": "caixinha 200ml",
+      "imagem": "images/bebidas/suco_200ml.png",
+      "disponivel": true,
+      "destaque": false,
+      "acompanha": null
+    }
+  ]
+}
