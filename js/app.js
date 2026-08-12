@@ -410,8 +410,17 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('qty-confirm')?.addEventListener('click', () => {
     if (!_qtyItem) return;
     const obs = document.getElementById('qty-obs')?.value?.trim() || '';
+    const tipo = _qtyItem.tipo_venda || _qtyItem.tipo || 'unidade';
     CartModule.add(_qtyItem, _qtyVal, _qtyItem.preco, obs);
-    showToast(`${_qtyItem.nome} adicionado ao pedido!`, 'success');
+    
+    let detailStr = '';
+    if (tipo === 'kg') {
+      detailStr = ` (${String(_qtyVal).replace('.', ',')} kg)`;
+    } else if (tipo === 'porcao') {
+      detailStr = ` (${_qtyVal} porção${_qtyVal > 1 ? 'ões' : ''})`;
+    }
+
+    showToast(`${_qtyItem.nome}${detailStr} adicionado ao pedido!`, 'success');
     updateAllCartUI();
     closeQtyModal();
   });
@@ -440,7 +449,15 @@ function updateAllCartUI() {
   const topCartBtn = document.getElementById('nav-cart-btn');
   const badge = document.getElementById('nav-cart-badge');
   const navTotal = document.getElementById('nav-cart-total');
-  if (topCartBtn) topCartBtn.classList.toggle('has-items', count > 0);
+  
+  if (topCartBtn) {
+    topCartBtn.classList.toggle('has-items', count > 0);
+    topCartBtn.classList.remove('cart-highlight-anim');
+    void topCartBtn.offsetWidth;
+    topCartBtn.classList.add('cart-highlight-anim');
+    setTimeout(() => topCartBtn.classList.remove('cart-highlight-anim'), 1200);
+  }
+  
   if (badge) {
     badge.textContent = count;
     badge.style.display = count > 0 ? 'inline-block' : 'none';
@@ -450,19 +467,26 @@ function updateAllCartUI() {
   const floatBtn = document.getElementById('floating-cart-btn');
   const floatBadge = document.getElementById('floating-cart-badge');
   const floatTotal = document.getElementById('floating-cart-total');
+  
   if (floatBtn) {
     floatBtn.classList.toggle('has-items', count > 0);
-    floatBtn.classList.add('pop-anim');
-    if (topCartBtn) topCartBtn.classList.add('pop-anim');
-    setTimeout(() => {
-      floatBtn.classList.remove('pop-anim');
-      if (topCartBtn) topCartBtn.classList.remove('pop-anim');
-    }, 400);
+    floatBtn.classList.remove('cart-highlight-anim');
+    void floatBtn.offsetWidth;
+    floatBtn.classList.add('cart-highlight-anim');
+    setTimeout(() => floatBtn.classList.remove('cart-highlight-anim'), 1200);
   }
+  
   if (floatBadge) {
     floatBadge.textContent = count;
     floatBadge.style.display = count > 0 ? 'flex' : 'none';
+    if (count > 0) {
+      floatBadge.classList.remove('badge-pop-anim');
+      void floatBadge.offsetWidth;
+      floatBadge.classList.add('badge-pop-anim');
+      setTimeout(() => floatBadge.classList.remove('badge-pop-anim'), 600);
+    }
   }
+  
   if (floatTotal) floatTotal.textContent = formatBRL(total);
 
   updateDrawerCart(items, total, count);
@@ -904,14 +928,31 @@ function setupKeyboardAccessibility() {
 }
 
 // ── Toast ──────────────────────────────────────────────────
-function showToast(msg, type = 'info', duration = 2800) {
+function showToast(msg, type = 'info', duration = 3500) {
   const wrap = document.getElementById('toast-wrap');
   if (!wrap) return;
+  
+  // Limpa toast anterior para evitar acúmulo poluindo a tela
+  wrap.innerHTML = '';
+
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
-  toast.textContent = msg;
+
+  const iconHtml = type === 'success'
+    ? `<div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" width="16" height="16"><polyline points="20 6 9 17 4 12"/></svg></div>`
+    : `<div class="toast-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></div>`;
+
+  toast.innerHTML = `
+    ${iconHtml}
+    <span class="toast-msg">${msg}</span>
+  `;
+
   wrap.appendChild(toast);
-  setTimeout(() => toast.remove(), duration);
+
+  setTimeout(() => {
+    toast.classList.add('fade-out');
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
 }
 
 // ── Formatação de moeda ────────────────────────────────────
