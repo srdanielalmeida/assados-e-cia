@@ -10,12 +10,19 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
 import authRoutes from './routes/authRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
 import catalogRoutes from './routes/catalogRoutes.js';
 
 import { hasValidToken } from './modules/tokenStore.js';
 import { startOrderWorker } from './modules/orderWorker.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const ROOT_DIR = join(__dirname, '..');
 
 // ── Configuração ───────────────────────────────────────────────
 const PORT = process.env.PORT ?? 3001;
@@ -46,7 +53,7 @@ app.use(express.urlencoded({ extended: true }));
 // Logging de requests HTTP
 app.use(morgan(NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-// ── Rotas ──────────────────────────────────────────────────────
+// ── Rotas da API ───────────────────────────────────────────────
 app.use('/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/catalog', catalogRoutes);
@@ -55,7 +62,7 @@ app.use('/api/catalog', catalogRoutes);
 app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
-    service: 'Assados & Cia — Backend iFood',
+    service: 'Assados & Cia — Backend & Frontend',
     environment: NODE_ENV,
     timestamp: new Date().toISOString(),
     ifood: {
@@ -65,12 +72,31 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ── Rota 404 ───────────────────────────────────────────────────
+// ── Servir Frontend Estático (index.html, admin.html, imagens, css, js) ──
+app.use(express.static(ROOT_DIR));
+
+// Rotas diretas para páginas principais
+app.get('/', (req, res) => {
+  res.sendFile(join(ROOT_DIR, 'index.html'));
+});
+
+app.get('/admin', (req, res) => {
+  res.sendFile(join(ROOT_DIR, 'admin.html'));
+});
+
+// ── Rota 404 (para requisições de API não encontradas) ──────────
 app.use((req, res) => {
+  // Se for uma requisição de página web, redireciona para a home
+  if (req.accepts('html')) {
+    return res.sendFile(join(ROOT_DIR, 'index.html'));
+  }
+
   res.status(404).json({
     error: `Rota não encontrada: ${req.method} ${req.path}`,
     availableRoutes: [
       'GET  /health',
+      'GET  /',
+      'GET  /admin',
       'GET  /auth/ifood',
       'POST /auth/ifood/callback',
       'GET  /auth/status',
@@ -93,13 +119,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-// ── Inicialização ──────────────────────────────────────────────
-app.listen(PORT, () => {
+// ── Inicialização (0.0.0.0 obrigatório para Docker / Coolify) ────
+app.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('🔥 ─────────────────────────────────────');
-  console.log('   Assados & Cia — Backend iFood');
+  console.log('   Assados & Cia — Servidor Unificado');
   console.log(`   Ambiente : ${NODE_ENV}`);
-  console.log(`   Porta    : http://localhost:${PORT}`);
+  console.log(`   Porta    : http://0.0.0.0:${PORT}`);
+  console.log(`   Site     : http://localhost:${PORT}`);
+  console.log(`   Admin    : http://localhost:${PORT}/admin`);
   console.log(`   Health   : http://localhost:${PORT}/health`);
   console.log('─────────────────────────────────────────');
 
