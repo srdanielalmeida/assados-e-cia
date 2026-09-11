@@ -292,11 +292,14 @@ ul { list-style: none; }
 /* Área do vídeo/imagem — lado direito */
 .hero-image-area {
   flex: 1;
-  background: linear-gradient(145deg, #2a1a0a 0%, #4a2c10 100%);
+  background: var(--white);
   border-radius: 0 var(--radius-xl) 0 0;
   overflow: hidden;
   position: relative;
   min-height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Overlay: gradiente da esquerda para transição suave com o texto */
@@ -305,15 +308,13 @@ ul { list-style: none; }
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, var(--white) 0%, rgba(255,255,255,0.05) 35%, transparent 60%);
+  background: linear-gradient(to right, var(--white) 0%, rgba(255,255,255,0.05) 25%, transparent 50%);
   z-index: 2;
   pointer-events: none;
 }
-.hero-video-overlay {
-  /* Div extra para garantir overlay no HTML sem pseudo-element */
-}
 
-/* Vídeo ocupa 100% do container */
+/* Imagem e Vídeo ocupam 100% do container */
+.hero-img,
 .hero-video {
   position: absolute;
   inset: 0;
@@ -322,11 +323,11 @@ ul { list-style: none; }
   object-fit: cover;
   object-position: center;
   z-index: 1;
+  transition: transform 0.4s ease;
 }
 
-/* Fallback: imagem usada como poster */
-.hero-img-element {
-  display: none;
+.hero-image-area:hover .hero-img {
+  transform: scale(1.02);
 }
 
 

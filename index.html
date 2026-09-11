@@ -48,8 +48,11 @@
   }
   </script>
   
+  <!-- Preload da imagem hero para carregamento ultra-rápido -->
+  <link rel="preload" as="image" href="/images/hero-frango.webp" type="image/webp" fetchpriority="high">
+
   <!-- CSS -->
-  <link rel="stylesheet" href="/css/style.css?v=17">
+  <link rel="stylesheet" href="/css/style.css?v=18">
   <style>
     /* Ocultar elementos enquanto o JS não carregar */
     [data-cloak] { display: none !important; }
@@ -182,18 +185,21 @@
             </div>
           </div>
           
-          <!-- Área do vídeo/imagem hero -->
+          <!-- Área da imagem hero (otimizada em WebP para carregamento instantâneo) -->
           <div class="hero-image-area">
-            <video
-              class="hero-video"
-              autoplay
-              muted
-              loop
-              playsinline
-              poster="images/hero-frango.png"
-            >
-              <source src="images/costela-nova.mp4" type="video/mp4">
-            </video>
+            <picture>
+              <source srcset="/images/hero-frango.webp" type="image/webp">
+              <img
+                src="/images/hero-frango.jpg"
+                alt="O Melhor Frango Assado do Jardim Ângela — Assados & Cia"
+                class="hero-img"
+                width="1200"
+                height="1200"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+              >
+            </picture>
             <div class="hero-video-overlay"></div>
           </div>
 
