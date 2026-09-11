@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo — Assados & Cia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --primary: #10b981;
+      --primary-hover: #059669;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --blue: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Modal de Login / PIN */
+    #login-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 32px;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-card h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .pin-input {
+      width: 100%;
+      padding: 14px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 18px;
+      text-align: center;
+      letter-spacing: 6px;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .pin-input:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Layout principal */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-area h1 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .status-badge {
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-badge.online {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-badge.offline {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    main {
+      padding: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Grid de Métricas */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .metric-title {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Seção de Pedidos */
+    .orders-section {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .orders-table th, .orders-table td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 14px;
+    }
+
+    .orders-table th {
+      background: rgba(15, 23, 42, 0.5);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .orders-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+
+    }
+
+    .tag.placed { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .tag.confirmed { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .tag.concluded { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag.cancelled { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    .refresh-btn {
+      background: #334155;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .refresh-btn:hover { background: #475569; }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Modal de PIN -->
+  <div id="login-modal">
+    <div class="login-card">
+      <h2>🍖 Assados & Cia</h2>
+      <p>Digite o PIN administrativo para acessar</p>
+      <input type="password" id="pin-input" class="pin-input" maxlength="6" placeholder="••••" autofocus>
+      <button class="btn" onclick="authenticate()">Entrar no Painel</button>
+      <div id="login-error" class="error-msg">PIN incorreto. Tente novamente.</div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo-area">
+      <h1>🍖 Painel Administrativo — Assados & Cia</h1>
+      <span id="ifood-status" class="status-badge offline">
+        <span class="dot"></span> Backend Offline
+      </span>
+    </div>
+    <button class="refresh-btn" onclick="loadDashboardData()">🔄 Atualizar Dados</button>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <main>
+    <!-- Grid de Indicadores -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-title">Faturamento Bruto (Hoje)</div>
+        <div class="metric-value" id="gross-revenue">R$ 0,00</div>
+        <div class="metric-sub" id="total-orders-count">0 pedidos concluídos</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">Faturamento Líquido Estimado</div>
+        <div class="metric-value" style="color: #34d399;" id="net-revenue">R$ 0,00</div>
+        <div class="metric-sub" id="ifood-fees-estimated">Desconto taxas iFood (~12%)</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">Ticket Médio (Hoje)</div>
+        <div class="metric-value" style="color: #60a5fa;" id="avg-ticket">R$ 0,00</div>
+        <div class="metric-sub">Valor médio por pedido</div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-title">Status dos Pedidos</div>
+        <div class="metric-value" style="font-size: 20px; margin-top: 4px;" id="orders-by-status">
+          0 Novos | 0 Concluídos
+        </div>
+        <div class="metric-sub">Sincronizado com o servidor</div>
+      </div>
+    </div>
+
+    <!-- Tabela de Pedidos -->
+    <div class="orders-section">
+      <div class="section-header">
+        <h2 style="font-size: 18px; font-weight: 600;">📋 Pedidos Recentes</h2>
+        <span style="font-size: 13px; color: var(--text-muted);" id="last-updated-text">Última atualização: --:--</span>
+      </div>
+
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>Ref. / ID</th>
+            <th>Cliente</th>
+            <th>Data/Hora</th>
+            <th>Itens</th>
+            <th>Total Bruto</th>
+            <th>Líquido Est.</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="orders-table-body">
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">
+              Carregando pedidos...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const API_BASE = 'http://localhost:3001';
+    let adminPin = localStorage.getItem('admin_pin') || '';
+
+    // Verifica PIN gravado ao carregar
+    window.addEventListener('DOMContentLoaded', () => {
+      if (adminPin) {
+        document.getElementById('login-modal').style.display = 'none';
+        loadDashboardData();
+      }
+    });
+
+    // Submeter PIN
+    function authenticate() {
+      const pin = document.getElementById('pin-input').value.trim();
+      if (!pin) return;
+
+      adminPin = pin;
+      localStorage.setItem('admin_pin', pin);
+      
+      // Testa credencial
+      loadDashboardData().then(success => {
+        if (success) {
+          document.getElementById('login-modal').style.display = 'none';
+          document.getElementById('login-error').style.display = 'none';
+        } else {
+          document.getElementById('login-error').style.display = 'block';
+          localStorage.removeItem('admin_pin');
+          adminPin = '';
+        }
+      });
+    }
+
+    // Permitir Enter na caixa do PIN
+    document.getElementById('pin-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') authenticate();
+    });
+
+    async function loadDashboardData() {
+      try {
+        const headers = { 'X-Admin-Pin': adminPin };
+
+        // 1. Health check
+        const healthRes = await fetch(`${API_BASE}/health`);
+        if (healthRes.ok) {
+          const healthData = await healthRes.json();
+          const badge = document.getElementById('ifood-status');
+          badge.className = 'status-badge online';
+          badge.innerHTML = `<span class="dot"></span> Backend Conectado (${healthData.ifood.authenticated ? 'iFood OK' : 'Sem Token'})`;
+        }
+
+        // 2. Resumo financeiro
+        const summaryRes = await fetch(`${API_BASE}/api/orders/summary`, { headers });
+        if (!summaryRes.ok) return false;
+        
+        const summaryData = await summaryRes.json();
+        const fin = summaryData.summary.financials;
+        const byStatus = summaryData.summary.byStatus;
+
+        document.getElementById('gross-revenue').innerText = `R$ ${fin.grossRevenue.toFixed(2).replace('.', ',')}`;
+        document.getElementById('net-revenue').innerText = `R$ ${fin.netRevenueEstimated.toFixed(2).replace('.', ',')}`;
+        document.getElementById('ifood-fees-estimated').innerText = `Taxas iFood: -R$ ${fin.ifoodFeesEstimated.toFixed(2).replace('.', ',')}`;
+        document.getElementById('avg-ticket').innerText = `R$ ${fin.averageTicket.toFixed(2).replace('.', ',')}`;
+        document.getElementById('total-orders-count').innerText = `${byStatus.concluded} pedido(s) concluído(s) hoje`;
+        document.getElementById('orders-by-status').innerText = `${byStatus.placed} Novos | ${byStatus.confirmed} Confirmados | ${byStatus.concluded} Concluídos`;
+
+        // 3. Tabela de Pedidos
+        const ordersRes = await fetch(`${API_BASE}/api/orders?limit=50`, { headers });
+        if (ordersRes.ok) {
+          const ordersData = await ordersRes.json();
+          renderOrdersTable(ordersData.orders);
+        }
+
+        document.getElementById('last-updated-text').innerText = `Última atualização: ${new Date().toLocaleTimeString('pt-BR')}`;
+        return true;
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+        return false;
+      }
+    }
+
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('orders-table-body');
+      if (!orders || orders.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 32px;">
+              Nenhum pedido registrado hoje.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const time = new Date(o.placedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        const itemsSummary = o.items.map(i => `${i.quantity}x ${i.name}`).join(', ');
+        const statusClass = (o.status || 'placed').toLowerCase();
+
+        return `
+          <tr>
+            <td><strong>#${o.shortReference || o.id.substring(0, 8)}</strong></td>
+            <td>${o.customer?.name || 'Cliente'}</td>
+            <td>${time}</td>
+            <td style="max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${itemsSummary}">${itemsSummary}</td>
+            <td>R$ ${(o.totals?.orderAmount || 0).toFixed(2).replace('.', ',')}</td>
+            <td style="color: #34d399;">R$ ${(o.totals?.netAmountEstimated || o.totals?.orderAmount || 0).toFixed(2).replace('.', ',')}</td>
+            <td><span class="tag ${statusClass}">${o.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Auto-refresh a cada 15 segundos
+    setInterval(loadDashboardData, 15000);
+  </script>
+</body>
+</html>
