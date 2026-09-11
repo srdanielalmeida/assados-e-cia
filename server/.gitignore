@@ -1,0 +1,13 @@
+# Variáveis de ambiente reais — NUNCA commitar este arquivo
+.env
+
+# Tokens OAuth persistidos — contém access_token e refresh_token
+data/tokens.json
+data/orders.json
+
+# Dependências
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*

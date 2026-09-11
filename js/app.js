@@ -8,9 +8,22 @@
 
 // ── Configurações ──────────────────────────────────────────
 const CONFIG = {
+  // Contato
   whatsappNumber: '5511944538326',
   pixKey: '(11) 94453-8326',
   storageUserKey: 'assados_cia_user_data',
+
+  // Dados operacionais do restaurante
+  nomeRestaurante: 'Assados & Cia',
+  enderecoColeta: 'R. João de Lima Bonfante, 29 — Jardim Ângela, SP',
+  tempoPreparoMedio: '50 min',
+
+  // Identificador iFood (para consulta no Portal do Parceiro)
+  ifood: {
+    merchantId: '433624d2-a0a2-433a-a443-9cc124c240bf',
+    modeloLogistica: 'IFOOD_ENTREGA'
+  },
+
   horarios: {
     // 0=Dom, 1=Seg…6=Sáb
     0: { open: 10, close: 15 },
@@ -129,6 +142,7 @@ const SVG_ICONS = {
   check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
   aves:            `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.501 5.501 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>`,
   carnes:          `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+  espetinhos:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="4" y1="20" x2="20" y2="4"/><circle cx="9" cy="15" r="2.5"/><circle cx="15" cy="9" r="2.5"/></svg>`,
   acompanhamentos: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
   bebidas:         `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>`,
 };
@@ -297,10 +311,10 @@ function buildPratoItem(item) {
   return li;
 }
 
-// ── Adiciona item ao carrinho (com modal se kg/porção) ─────
+// ── Adiciona item ao carrinho (com modal se kg/porção/espetinho) ─────
 function handleAddItem(item) {
   const tipo = item.tipo_venda || item.tipo || 'unidade';
-  if (tipo === 'kg' || tipo === 'porcao') {
+  if (tipo === 'kg' || tipo === 'porcao' || tipo === 'espetinho') {
     openQtyModal(item);
   } else {
     // Unidade — adiciona direto com qty=1
@@ -321,9 +335,9 @@ function openQtyModal(item) {
 
   document.getElementById('qty-nome').textContent = item.nome;
   document.getElementById('qty-preco').textContent =
-    `${formatBRL(item.preco)} por ${tipo === 'kg' ? 'kg' : 'porção'}`;
+    `${formatBRL(item.preco)} por ${tipo === 'kg' ? 'kg' : tipo === 'espetinho' ? 'espeto' : 'porção'}`;
   document.getElementById('qty-label').textContent =
-    tipo === 'kg' ? 'Quantidade em Kg' : 'Porções';
+    tipo === 'kg' ? 'Quantidade em Kg' : tipo === 'espetinho' ? 'Quantidade de Espetos' : 'Porções';
   document.getElementById('qty-obs').value = '';
 
   // Exibe/Oculta pills para kg
@@ -357,6 +371,8 @@ function updateQtyDisplay() {
   if (display) {
     if (tipo === 'kg') {
       display.textContent = `${_qtyVal.toFixed(2).replace('.', ',')} kg`;
+    } else if (tipo === 'espetinho') {
+      display.textContent = `${_qtyVal} espeto${_qtyVal > 1 ? 's' : ''}`;
     } else {
       display.textContent = `${_qtyVal} porção${_qtyVal > 1 ? 'ões' : ''}`;
     }
@@ -418,6 +434,8 @@ document.addEventListener('DOMContentLoaded', () => {
       detailStr = ` (${String(_qtyVal).replace('.', ',')} kg)`;
     } else if (tipo === 'porcao') {
       detailStr = ` (${_qtyVal} porção${_qtyVal > 1 ? 'ões' : ''})`;
+    } else if (tipo === 'espetinho') {
+      detailStr = ` (${_qtyVal} espeto${_qtyVal > 1 ? 's' : ''})`;
     }
 
     showToast(`${_qtyItem.nome}${detailStr} adicionado ao pedido!`, 'success');
@@ -544,6 +562,8 @@ function buildDrawerItem(it) {
     ? `${String(it.qty).replace('.', ',')} kg × ${formatBRL(it.preco)}/kg`
     : tipo === 'porcao'
     ? `${it.qty} porção × ${formatBRL(it.preco)}`
+    : tipo === 'espetinho'
+    ? `${it.qty} espeto${it.qty > 1 ? 's' : ''} × ${formatBRL(it.preco)}`
     : `${it.qty} × ${formatBRL(it.preco)}`;
 
   const subtotal = formatBRL(it.qty * it.preco);
@@ -563,7 +583,7 @@ function buildDrawerItem(it) {
       <div class="ci-preco" style="margin-top:4px;">${subtotal}</div>
       <div class="ci-controls">
         <button class="ci-btn" data-action="dec" aria-label="Diminuir quantidade de ${it.nome}">−</button>
-        <span class="ci-qty">${tipo === 'kg' ? String(it.qty).replace('.', ',') + ' kg' : it.qty}</span>
+        <span class="ci-qty">${tipo === 'kg' ? String(it.qty).replace('.', ',') + ' kg' : tipo === 'espetinho' ? it.qty + ' esp' : it.qty}</span>
         <button class="ci-btn" data-action="inc" aria-label="Aumentar quantidade de ${it.nome}">+</button>
       </div>
     </div>
@@ -647,9 +667,9 @@ function setupDeliveryToggle() {
       document.querySelectorAll('#delivery-opts .pay-opt').forEach(l => {
         l.classList.toggle('selected', l.contains(opt) && opt.checked);
       });
-      // Limpa erro do endereço se trocado para retirada
+      // Limpa erros dos campos de endereço se trocado para retirada
       if (opt.value === 'retirada') {
-        clearFieldError('co-addr');
+        ['co-rua', 'co-numero', 'co-bairro'].forEach(id => clearFieldError(id));
       }
     });
   });
@@ -727,7 +747,10 @@ function setupPhoneMask() {
   });
 
   document.getElementById('co-nome')?.addEventListener('input', () => clearFieldError('co-nome'));
-  document.getElementById('co-addr')?.addEventListener('input', () => clearFieldError('co-addr'));
+  // Limpa erros dos campos de endereço estruturado ao digitar
+  ['co-rua', 'co-numero', 'co-bairro'].forEach(id => {
+    document.getElementById(id)?.addEventListener('input', () => clearFieldError(id));
+  });
 }
 
 // ── Persistência de Dados de Contato (localStorage) ────────
@@ -748,6 +771,20 @@ function loadUserData() {
   }
 }
 
+// Restaura campos de endereço estruturado do localStorage
+function restoreAddressFields(savedUser) {
+  if (!savedUser) return;
+  const fields = [
+    ['co-rua', 'rua'], ['co-numero', 'numero'],
+    ['co-bairro', 'bairro'], ['co-complemento', 'complemento'],
+    ['co-referencia', 'referencia']
+  ];
+  fields.forEach(([id, key]) => {
+    const el = document.getElementById(id);
+    if (el && savedUser[key]) el.value = savedUser[key];
+  });
+}
+
 // ── Checkout Modal ─────────────────────────────────────────
 function openCheckout() {
   const items = CartModule.getItems();
@@ -761,10 +798,9 @@ function openCheckout() {
   if (savedUser) {
     const nameEl = document.getElementById('co-nome');
     const telEl  = document.getElementById('co-tel');
-    const addrEl = document.getElementById('co-addr');
     if (nameEl && savedUser.nome) nameEl.value = savedUser.nome;
     if (telEl && savedUser.tel) telEl.value = savedUser.tel;
-    if (addrEl && savedUser.addr) addrEl.value = savedUser.addr;
+    restoreAddressFields(savedUser);
   }
 
   // Resumo de Itens
@@ -777,6 +813,8 @@ function openCheckout() {
         ? `${it.qty}x`
         : tipo === 'kg'
         ? `${String(it.qty).replace('.', ',')} kg`
+        : tipo === 'espetinho'
+        ? `${it.qty} espeto${it.qty > 1 ? 's' : ''}`
         : `${it.qty} porção`;
       return `<div class="os-row"><span class="os-name">${det} ${it.nome}</span><span class="os-price">${subtotal}</span></div>`;
     }).join('');
@@ -827,13 +865,27 @@ function setFieldError(fieldId, message) {
 }
 
 function confirmOrder() {
+  // Trava defensiva: garante que o carrinho não está vazio (edge case de aba dupla)
+  const _items = CartModule.getItems();
+  if (!_items || _items.length === 0) {
+    showToast('Seu carrinho está vazio. Adicione itens antes de enviar.', 'info');
+    closeCheckout();
+    return;
+  }
+
   const nome  = document.getElementById('co-nome')?.value.trim();
   const tel   = document.getElementById('co-tel')?.value.trim();
   const delivery = document.querySelector('#delivery-opts input:checked')?.value;
-  const addr  = document.getElementById('co-addr')?.value.trim();
   const pagto = document.querySelector('#pay-opts input:checked')?.value;
   const troco = document.getElementById('co-troco')?.value.trim();
   const obs   = document.getElementById('drawer-obs')?.value.trim();
+
+  // Coleta campos de endereço estruturado (delivery)
+  const rua         = document.getElementById('co-rua')?.value.trim() || '';
+  const numero      = document.getElementById('co-numero')?.value.trim() || '';
+  const bairro      = document.getElementById('co-bairro')?.value.trim() || '';
+  const complemento = document.getElementById('co-complemento')?.value.trim() || '';
+  const referencia  = document.getElementById('co-referencia')?.value.trim() || '';
 
   let hasError = false;
 
@@ -848,9 +900,10 @@ function confirmOrder() {
     hasError = true;
   }
 
-  if (delivery === 'delivery' && !addr) {
-    setFieldError('co-addr', 'Informe o endereço completo para entrega.');
-    hasError = true;
+  if (delivery === 'delivery') {
+    if (!rua) { setFieldError('co-rua', 'Informe a rua ou avenida.'); hasError = true; }
+    if (!numero) { setFieldError('co-numero', 'Informe o número.'); hasError = true; }
+    if (!bairro) { setFieldError('co-bairro', 'Informe o bairro.'); hasError = true; }
   }
 
   if (hasError) {
@@ -860,10 +913,13 @@ function confirmOrder() {
   }
 
   // Salva dados no localStorage para agilizar compras futuras
-  saveUserData({ nome, tel, addr });
+  saveUserData({ nome, tel, rua, numero, bairro, complemento, referencia });
 
-  // Constrói payload formatado
-  const msg = buildWhatsAppMessage({ nome, tel, delivery, addr, pagto, troco, obs });
+  // Gera código de comanda único (rastreio WhatsApp ↔ iFood)
+  const orderId = 'AC-' + Math.floor(1000 + Math.random() * 9000);
+
+  // Constroi payload formatado
+  const msg = buildWhatsAppMessage({ orderId, nome, tel, delivery, rua, numero, bairro, complemento, referencia, pagto, troco, obs });
   const url = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 
@@ -871,7 +927,7 @@ function confirmOrder() {
   showToast('Redirecionando para o WhatsApp...', 'success');
 }
 
-function buildWhatsAppMessage({ nome, tel, delivery, addr, pagto, troco, obs }) {
+function buildWhatsAppMessage({ orderId, nome, tel, delivery, rua, numero, bairro, complemento, referencia, pagto, troco, obs }) {
   const items = CartModule.getItems();
   const total = CartModule.getTotal();
 
@@ -881,6 +937,8 @@ function buildWhatsAppMessage({ nome, tel, delivery, addr, pagto, troco, obs }) 
       ? `${it.qty}x`
       : tipo === 'kg'
       ? `${String(it.qty).replace('.', ',')} kg`
+      : tipo === 'espetinho'
+      ? `${it.qty} espeto${it.qty > 1 ? 's' : ''}`
       : `${it.qty} porção`;
     let line = `  • ${det} ${it.nome} — ${formatBRL(it.qty * it.preco)}`;
     if (it.obs) line += `\n    _Obs: ${it.obs}_`;
@@ -888,14 +946,23 @@ function buildWhatsAppMessage({ nome, tel, delivery, addr, pagto, troco, obs }) 
   });
 
   const pagtoStr = { pix: 'PIX (Transferência)', cartao: 'Cartão (na entrega/retirada)', dinheiro: 'Dinheiro' }[pagto] || pagto;
-  const entregaStr = delivery === 'delivery' ? `🛵 Delivery\n📍 *Endereço:* ${addr}` : '🚶‍♂️ Retirada no Local';
 
-  let msg = `🍗 *NOVO PEDIDO — ASSADOS & CIA*\n`;
+  let msg = `🍗 *PEDIDO #${orderId} — ${CONFIG.nomeRestaurante.toUpperCase()}*\n`;
+  msg += `⏱ *Preparo estimado:* ${CONFIG.tempoPreparoMedio}\n`;
   msg += `----------------------------------\n`;
   msg += `👤 *Cliente:* ${nome}\n`;
   msg += `📞 *Contato:* ${tel}\n`;
-  msg += `📦 *Tipo:* ${entregaStr}\n\n`;
-  msg += `📋 *ITENS DO PEDIDO:*\n${linhas.join('\n')}\n\n`;
+  msg += `📦 *Tipo:* ${delivery === 'delivery' ? '🛵 Delivery' : '🚶‍♂️ Retirada no Local'}\n`;
+
+  if (delivery === 'delivery') {
+    msg += `\n🏠 *ENDEREÇO DE ENTREGA*\n`;
+    msg += `  *Rua:* ${rua}, Nº ${numero}\n`;
+    msg += `  *Bairro:* ${bairro}\n`;
+    if (complemento) msg += `  *Complemento:* ${complemento}\n`;
+    if (referencia)  msg += `  *Referência:* ${referencia}\n`;
+  }
+
+  msg += `\n📋 *ITENS DO PEDIDO:*\n${linhas.join('\n')}\n\n`;
   msg += `----------------------------------\n`;
   msg += `💳 *Forma de Pagamento:* ${pagtoStr}\n`;
   if (pagto === 'dinheiro' && troco) {
@@ -903,7 +970,8 @@ function buildWhatsAppMessage({ nome, tel, delivery, addr, pagto, troco, obs }) 
   }
   msg += `💰 *TOTAL DOS ITENS:* ${formatBRL(total)}\n`;
   if (delivery === 'delivery') {
-    msg += `ℹ️ _Taxa de entrega a confirmar via WhatsApp_\n`;
+    msg += `🛵 _Taxa de entrega a confirmar via WhatsApp_\n`;
+    msg += `📍 *Coleta (iFood):* ${CONFIG.enderecoColeta}\n`;
   }
   if (obs) {
     msg += `\n📝 *Observações Gerais:* ${obs}\n`;

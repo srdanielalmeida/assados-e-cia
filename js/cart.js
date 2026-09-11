@@ -89,7 +89,8 @@ const CartModule = (() => {
 
   // ── Totais ─────────────────────────────────────────────
   function getTotal() {
-    return items.reduce((acc, i) => acc + (i.preco * i.qty), 0);
+    const raw = items.reduce((acc, i) => acc + (i.preco * i.qty), 0);
+    return Math.round(raw * 100) / 100;
   }
 
   function getCount() {

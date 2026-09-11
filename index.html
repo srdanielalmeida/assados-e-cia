@@ -465,11 +465,40 @@
         </div>
         
         <div class="input-group" id="delivery-addr-wrap" style="display:none;">
-          <label for="co-addr">Endereço Completo de Entrega <span class="req-star">*</span></label>
-          <textarea id="co-addr" rows="2" placeholder="Rua, Número, Complemento, Bairro (Entregamos no Jd. Ângela e região)"></textarea>
-          <span class="input-error-msg" id="err-co-addr"></span>
-          
-          <div id="delivery-info-note" style="margin-top:10px; background:#EFF6FF; border:1px solid #BFDBFE; color:#1E40AF; padding:10px 14px; border-radius:var(--radius-sm); font-size:12px; display:flex; align-items:flex-start; gap:8px;">
+          <!-- Rua / Avenida -->
+          <div class="input-group" id="group-co-rua" style="margin-bottom:12px;">
+            <label for="co-rua">Rua / Avenida <span class="req-star">*</span></label>
+            <input type="text" id="co-rua" placeholder="Ex: R. João de Lima Bonfante" autocomplete="address-line1">
+            <span class="input-error-msg" id="err-co-rua"></span>
+          </div>
+
+          <!-- Número + Bairro lado a lado -->
+          <div style="display:grid; grid-template-columns:1fr 2fr; gap:12px; margin-bottom:12px;">
+            <div class="input-group" id="group-co-numero" style="margin-bottom:0;">
+              <label for="co-numero">Número <span class="req-star">*</span></label>
+              <input type="text" id="co-numero" placeholder="Ex: 29" autocomplete="address-line2">
+              <span class="input-error-msg" id="err-co-numero"></span>
+            </div>
+            <div class="input-group" id="group-co-bairro" style="margin-bottom:0;">
+              <label for="co-bairro">Bairro <span class="req-star">*</span></label>
+              <input type="text" id="co-bairro" placeholder="Ex: Jardim Ângela" autocomplete="address-level2">
+              <span class="input-error-msg" id="err-co-bairro"></span>
+            </div>
+          </div>
+
+          <!-- Complemento (opcional) -->
+          <div class="input-group" style="margin-bottom:12px;">
+            <label for="co-complemento">Complemento</label>
+            <input type="text" id="co-complemento" placeholder="Apto, Bloco, Casa... (opcional)" autocomplete="address-line3">
+          </div>
+
+          <!-- Ponto de referência (opcional) -->
+          <div class="input-group" style="margin-bottom:0;">
+            <label for="co-referencia">Ponto de Referência</label>
+            <input type="text" id="co-referencia" placeholder="Ex: próx. ao mercado, portão azul..." autocomplete="off">
+          </div>
+
+          <div id="delivery-info-note" style="margin-top:12px; background:#EFF6FF; border:1px solid #BFDBFE; color:#1E40AF; padding:10px 14px; border-radius:var(--radius-sm); font-size:12px; display:flex; align-items:flex-start; gap:8px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="flex-shrink:0; margin-top:2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             <span>A taxa de entrega será confirmada via WhatsApp pelo atendente de acordo com a distância do seu bairro.</span>
           </div>
@@ -532,7 +561,7 @@
   <div class="toast-wrap" id="toast-wrap"></div>
 
   <!-- Scripts -->
-  <script src="js/cart.js?v=13"></script>
-  <script src="js/app.js?v=13"></script>
+  <script src="js/cart.js?v=16" charset="utf-8"></script>
+  <script src="js/app.js?v=16" charset="utf-8"></script>
 </body>
 </html>

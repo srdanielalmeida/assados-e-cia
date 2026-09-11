@@ -1,0 +1,3 @@
+# Diretório de dados persistidos pelo servidor.
+# tokens.json e orders.json são criados automaticamente pelo servidor
+# e são ignorados pelo git (ver .gitignore).
