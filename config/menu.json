@@ -78,7 +78,7 @@
       "id": "acompanhamentos",
       "nome": "Acompanhamentos & Marmitas",
       "emoji": "🥔",
-      "descricao": "Tropeiro, batatas e refeições completas"
+      "descricao": "Baião de dois, batatas e refeições completas"
     },
     {
       "id": "bebidas",
@@ -219,27 +219,27 @@
       "acompanha": "Arroz + Feijão Tropeiro + 3 Linguiças ou 1 Coxa"
     },
     {
-      "id": "feijao-tropeiro-kg",
-      "nome": "Feijão Tropeiro (kg)",
+      "id": "baiao-de-dois-kg",
+      "nome": "Baião de Dois (kg)",
       "categoria": "acompanhamentos",
-      "descricao": "Feijão tropeiro tradicional com farofa temperada, bacon, linguiça e couve.",
-      "preco": 50.00,
+      "descricao": "Tradicional baião de dois com feijão de corda, arroz soltinho, queijo coalho, carne seca, bacon e temperos frescos.",
+      "preco": 75.00,
       "tipo": "kg",
       "unidadeLabel": "kg",
-      "imagem": "images/pratos/farofa.jpg",
+      "imagem": "images/pratos/baiao-de-dois.jpeg",
       "disponivel": true,
       "destaque": true,
       "acompanha": null
     },
     {
-      "id": "feijao-tropeiro-500g",
-      "nome": "Feijão Tropeiro (500 g)",
+      "id": "baiao-de-dois-500g",
+      "nome": "Baião de Dois (500 g)",
       "categoria": "acompanhamentos",
-      "descricao": "Porção de 500g do nosso tradicional feijão tropeiro completo.",
-      "preco": 30.00,
+      "descricao": "Porção de 500g do nosso tradicional baião de dois completo com feijão de corda, queijo coalho e carne seca.",
+      "preco": 37.50,
       "tipo": "unidade",
       "unidadeLabel": "pote 500g",
-      "imagem": "images/pratos/farofa.jpg",
+      "imagem": "images/pratos/baiao-de-dois.jpeg",
       "disponivel": true,
       "destaque": false,
       "acompanha": null
