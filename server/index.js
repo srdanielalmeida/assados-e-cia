@@ -30,7 +30,10 @@ app.use(cors({
     'http://localhost:8000',
     'http://127.0.0.1:8000',
     'http://localhost:3000',
-    // Adicione aqui o domínio de produção quando fizer deploy
+    'https://assadosecia.com',
+    'https://www.assadosecia.com',
+    'http://assadosecia.com',
+    'http://www.assadosecia.com',
   ],
   methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'X-Admin-Pin'],

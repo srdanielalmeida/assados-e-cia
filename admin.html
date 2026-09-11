@@ -928,7 +928,11 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:3001';
+    // Suporte dinâmico para localhost ou domínio oficial assadosecia.com
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const API_BASE = isLocal 
+      ? 'http://localhost:3001' 
+      : (window.location.origin.includes('assadosecia.com') ? window.location.origin : 'http://localhost:3001');
     let adminPin = localStorage.getItem('admin_pin') || '';
     let currentFilter = 'ALL';
     let allOrders = [];
