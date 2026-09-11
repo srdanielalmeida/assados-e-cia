@@ -6,6 +6,7 @@
  */
 
 import 'dotenv/config';
+import http from 'http';
 import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
@@ -72,7 +73,11 @@ app.get('/health', (req, res) => {
   });
 });
 
-// ── Servir Frontend Estático (index.html, admin.html, imagens, css, js) ──
+// ── Servir Frontend Estático (Rotas explícitas para garantir entrega de CSS, JS, Imagens) ──
+app.use('/css', express.static(join(ROOT_DIR, 'css'), { maxAge: '1d' }));
+app.use('/js', express.static(join(ROOT_DIR, 'js'), { maxAge: '1d' }));
+app.use('/images', express.static(join(ROOT_DIR, 'images'), { maxAge: '7d' }));
+app.use('/config', express.static(join(ROOT_DIR, 'config')));
 app.use(express.static(ROOT_DIR));
 
 // Rotas diretas para páginas principais
@@ -84,10 +89,10 @@ app.get('/admin', (req, res) => {
   res.sendFile(join(ROOT_DIR, 'admin.html'));
 });
 
-// ── Rota 404 (para requisições de API não encontradas) ──────────
+// ── Rota 404 (para requisições não encontradas) ──────────────────
 app.use((req, res) => {
-  // Se for uma requisição de página web, redireciona para a home
-  if (req.accepts('html')) {
+  // Se for uma requisição de página web (navegador), serve a index.html
+  if (req.accepts('html') && !req.path.startsWith('/api') && !req.path.startsWith('/auth')) {
     return res.sendFile(join(ROOT_DIR, 'index.html'));
   }
 
@@ -120,12 +125,13 @@ app.use((err, req, res, next) => {
 });
 
 // ── Inicialização (0.0.0.0 obrigatório para Docker / Coolify) ────
-app.listen(PORT, '0.0.0.0', () => {
+const primaryServer = http.createServer(app);
+primaryServer.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log('🔥 ─────────────────────────────────────');
   console.log('   Assados & Cia — Servidor Unificado');
   console.log(`   Ambiente : ${NODE_ENV}`);
-  console.log(`   Porta    : http://0.0.0.0:${PORT}`);
+  console.log(`   Host     : 0.0.0.0:${PORT}`);
   console.log(`   Site     : http://localhost:${PORT}`);
   console.log(`   Admin    : http://localhost:${PORT}/admin`);
   console.log(`   Health   : http://localhost:${PORT}/health`);
@@ -142,5 +148,14 @@ app.listen(PORT, '0.0.0.0', () => {
 
   console.log('');
 });
+
+// Suporte automático para porta 3000 caso Coolify aponte para 3000 por padrão
+if (String(PORT) !== '3000') {
+  const secondaryServer = http.createServer(app);
+  secondaryServer.on('error', () => {});
+  secondaryServer.listen(3000, '0.0.0.0', () => {
+    console.log('⚡ Porta 3000 também ativa para compatibilidade com Coolify/Docker');
+  });
+}
 
 export default app;

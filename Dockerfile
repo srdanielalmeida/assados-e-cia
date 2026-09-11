@@ -10,9 +10,10 @@ RUN npm install && cd server && npm install
 # Copia todos os arquivos do projeto
 COPY . .
 
-# Expõe a porta usada pelo Coolify
+# Expõe as portas usadas pelo Coolify/Traefik
+EXPOSE 3000
 EXPOSE 3001
-ENV PORT=3001
+ENV PORT=3000
 ENV HOST=0.0.0.0
 ENV NODE_ENV=production
 

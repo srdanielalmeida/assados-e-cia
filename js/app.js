@@ -112,7 +112,7 @@ function updateStatusUI() {
 
 // ── Carrega cardápio ───────────────────────────────────────
 async function loadMenu() {
-  const res = await fetch('config/menu.json?v=' + Date.now());
+  const res = await fetch('/config/menu.json?v=' + Date.now());
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   menuData = await res.json();
   renderMenu(menuData.categorias);
