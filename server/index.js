@@ -91,8 +91,8 @@ app.get('/admin', (req, res) => {
 
 // ── Rota 404 (para requisições não encontradas) ──────────────────
 app.use((req, res) => {
-  // Se for uma requisição de página web (navegador), serve a index.html
-  if (req.accepts('html') && !req.path.startsWith('/api') && !req.path.startsWith('/auth')) {
+  // Se for uma requisição de página web (navegador sem extensão de arquivo), serve a index.html
+  if (req.accepts('html') && !req.path.startsWith('/api') && !req.path.startsWith('/auth') && !req.path.includes('.')) {
     return res.sendFile(join(ROOT_DIR, 'index.html'));
   }
 
@@ -149,13 +149,18 @@ primaryServer.listen(PORT, '0.0.0.0', () => {
   console.log('');
 });
 
-// Suporte automático para porta 3000 caso Coolify aponte para 3000 por padrão
-if (String(PORT) !== '3000') {
-  const secondaryServer = http.createServer(app);
-  secondaryServer.on('error', () => {});
-  secondaryServer.listen(3000, '0.0.0.0', () => {
-    console.log('⚡ Porta 3000 também ativa para compatibilidade com Coolify/Docker');
-  });
+// Escuta em todas as outras portas de fallback (3000, 3001, 80)
+// para garantir que Traefik / Coolify conecte com sucesso
+const fallbackPorts = [3000, 3001, 80, 8080].filter((p) => p !== Number(PORT));
+for (const extraPort of fallbackPorts) {
+  try {
+    const s = http.createServer(app);
+    s.on('error', () => {}); // Ignora silenciosamente se ocupada ou sem permissão
+    s.listen(extraPort, '0.0.0.0', () => {
+      console.log(`⚡ Porta ${extraPort} ativa para compatibilidade com Coolify/Traefik`);
+    });
+  } catch (err) {}
 }
 
 export default app;
+

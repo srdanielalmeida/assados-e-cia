@@ -11,9 +11,10 @@ RUN npm install && cd server && npm install
 COPY . .
 
 # Expõe as portas usadas pelo Coolify/Traefik
-EXPOSE 3000
 EXPOSE 3001
-ENV PORT=3000
+EXPOSE 3000
+EXPOSE 80
+ENV PORT=3001
 ENV HOST=0.0.0.0
 ENV NODE_ENV=production
 
